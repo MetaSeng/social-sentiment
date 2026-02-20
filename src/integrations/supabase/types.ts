@@ -14,7 +14,214 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      analysis_sessions: {
+        Row: {
+          avg_sentiment: number | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          page_url: string
+          status: string
+          total_comments: number | null
+          user_id: string
+        }
+        Insert: {
+          avg_sentiment?: number | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          page_url: string
+          status?: string
+          total_comments?: number | null
+          user_id: string
+        }
+        Update: {
+          avg_sentiment?: number | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          page_url?: string
+          status?: string
+          total_comments?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      comments: {
+        Row: {
+          comment_date: string | null
+          created_at: string
+          id: string
+          likes: number | null
+          product_id: string | null
+          product_name: string | null
+          sentiment: string
+          sentiment_score: number | null
+          session_id: string
+          text: string
+          user_id: string
+        }
+        Insert: {
+          comment_date?: string | null
+          created_at?: string
+          id?: string
+          likes?: number | null
+          product_id?: string | null
+          product_name?: string | null
+          sentiment?: string
+          sentiment_score?: number | null
+          session_id: string
+          text: string
+          user_id: string
+        }
+        Update: {
+          comment_date?: string | null
+          created_at?: string
+          id?: string
+          likes?: number | null
+          product_id?: string | null
+          product_name?: string | null
+          sentiment?: string
+          sentiment_score?: number | null
+          session_id?: string
+          text?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "analysis_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      insights: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string | null
+          id: string
+          session_id: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          icon?: string | null
+          id?: string
+          session_id: string
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string | null
+          id?: string
+          session_id?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insights_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "analysis_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          created_at: string
+          id: string
+          keywords: string[] | null
+          mentions: number | null
+          name: string
+          negative_pct: number | null
+          neutral_pct: number | null
+          positive_pct: number | null
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          mentions?: number | null
+          name: string
+          negative_pct?: number | null
+          neutral_pct?: number | null
+          positive_pct?: number | null
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          mentions?: number | null
+          name?: string
+          negative_pct?: number | null
+          neutral_pct?: number | null
+          positive_pct?: number | null
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "analysis_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          business_name: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          business_name?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          business_name?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
