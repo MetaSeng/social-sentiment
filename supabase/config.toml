@@ -1,1 +1,4 @@
 project_id = "shsabytsvbiocgbvcyec"
+
+[functions.analyze-comments]
+verify_jwt = false

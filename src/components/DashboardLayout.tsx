@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const navItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
@@ -22,6 +23,18 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, signOut } = useAuth();
+
+  const initials = user?.user_metadata?.full_name
+    ? user.user_metadata.full_name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
+    : user?.email?.slice(0, 2).toUpperCase() || "SS";
+
+  const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen flex w-full bg-background">
@@ -32,7 +45,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           collapsed ? "w-16" : "w-60"
         )}
       >
-        {/* Logo */}
         <div className="h-16 flex items-center gap-2 px-4 border-b border-border shrink-0">
           <div className="p-1.5 rounded-lg brand-gradient shrink-0">
             <MessageSquareText className="h-5 w-5 text-primary-foreground" />
@@ -40,7 +52,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           {!collapsed && <span className="font-display font-bold text-lg">SocialSight</span>}
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -62,7 +73,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           })}
         </nav>
 
-        {/* Collapse toggle */}
         <div className="p-2 border-t border-border">
           <button
             onClick={() => setCollapsed(!collapsed)}
@@ -74,9 +84,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className={cn("flex-1 transition-all duration-300", collapsed ? "ml-16" : "ml-60")}>
-        {/* Header */}
         <header className="h-16 border-b border-border bg-card/80 glass-effect sticky top-0 z-20 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
             <button onClick={() => setCollapsed(!collapsed)} className="lg:hidden text-muted-foreground hover:text-foreground">
@@ -102,17 +110,16 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </Button>
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/dashboard/settings")}>
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="brand-gradient text-primary-foreground text-xs font-semibold">SS</AvatarFallback>
+                <AvatarFallback className="brand-gradient text-primary-foreground text-xs font-semibold">{initials}</AvatarFallback>
               </Avatar>
-              <span className="text-sm font-medium hidden sm:block">Seller Pro</span>
+              <span className="text-sm font-medium hidden sm:block">{displayName}</span>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+            <Button variant="ghost" size="icon" onClick={handleSignOut}>
               <LogOut className="h-4 w-4 text-muted-foreground" />
             </Button>
           </div>
         </header>
 
-        {/* Page Content */}
         <main className="p-6">
           {children}
         </main>
